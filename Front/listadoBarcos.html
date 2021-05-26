@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="container-fluid ">
+        <ul class="nav justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link active" href="listadoBarcos.html">Listado de Barcos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="login.html">Alta</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <table class="table" id="tablaBarcos">
+            <thead>
+                <tr>
+                    <th data-field="matricula" scope="col">#</th>
+                    <th data-field="nombre" scope="col">Nombre</th>
+                    <th data-field="modelo" scope="col">Modelo</th>
+                    <th data-field="capicidad" scope="col">Capacidad</th>
+                    <th data-field="precio" scope="col">Precio</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function() {
+            var usuario = localStorage.getItem("emailPropietario");
+            if (usuario === "" || usuario == undefined) {
+                swal.fire("Ingrese al sistema primero");
+            } else {
+                $.ajax({
+                    url: "https://localhost:5001/Barco/ObtenerInfoBarco",
+                    type: "GET",
+
+                    success: function(result) {
+                        if (result.ok) {
+                            crearTabla(result.return);
+                        } else {
+                            swal.fire(result.error);
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+
+            }
+        });
+
+        function crearTabla(datos) {
+
+            for (var i = 0; i < datos.length; i++) {
+                var html = "<tr>";
+                html += "<td>" + datos[i].matricula + "</td>";
+                html += "<td>" + datos[i].nombre + "</td>";
+                html += "<td>" + datos[i].modelo + "</td>";
+                html += "<td>" + datos[i].capacidad + "</td>";
+                html += "<td>" + datos[i].precio + "</td>";
+                html += "</tr>";
+                $("#cuerpoTabla").append(html);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
